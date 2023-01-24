@@ -21,7 +21,8 @@ yargs.command({
         let id
         if (todos.length === 0) id = 1
         else id = todos[todos.length-1].id + 1
-        todos.push({ id, title: argv.title })
+        if (argv.title === '') return console.log('No es posible agrearg un todo vacío')
+        todos.push({ id, title: argv.title, status: false })
         fs.writeFileSync(filename, JSON.stringify(todos, null, 2))
     }
 })
@@ -51,6 +52,26 @@ yargs.command({
     handler: function() {
         // console.log(JSON.parse(fs.readFileSync(filename, 'utf-8')))
         console.log(todos)
+    }
+})
+
+
+//Create remove command
+yargs.command({
+    command: 'update',
+    describe: 'List the list of Todos',
+    builder: {
+        id: {
+            describe: 'The ID of the todo to be updated',
+            demandOption: true,
+            type: 'number'
+        }
+    },
+    handler: function(argv) {
+        let index = todos.findIndex(item => item.id === argv.id)
+        todos[index].status = true
+        fs.writeFileSync(filename, JSON.stringify(todos, null, 2))
+        console.log('Updated!')
     }
 })
 
