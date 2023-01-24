@@ -39,9 +39,14 @@ yargs.command({
         }
     },
     handler: function(argv) {
-        let newTodos = todos.filter(item => item.id !== argv.id)
-        fs.writeFileSync(filename, JSON.stringify(newTodos, null, 2))
-        console.log('Deleted!')
+        if (argv.id === 0) return console.log('No es posible....')
+        if (todos.some(item => item.id === argv.id)) {
+            let newTodos = todos.filter(item => item.id !== argv.id)
+            fs.writeFileSync(filename, JSON.stringify(newTodos, null, 2))
+            console.log('Deleted!')
+        } else {
+            console.log('error')
+        }
     }
 })
 
@@ -68,10 +73,15 @@ yargs.command({
         }
     },
     handler: function(argv) {
-        let index = todos.findIndex(item => item.id === argv.id)
-        todos[index].status = true
-        fs.writeFileSync(filename, JSON.stringify(todos, null, 2))
-        console.log('Updated!')
+        if (argv.id === 0) return console.log('No es posible....')
+        if (todos.some(item => item.id === argv.id)) {
+            let index = todos.findIndex(item => item.id === argv.id)
+            todos[index].status = true
+            fs.writeFileSync(filename, JSON.stringify(todos, null, 2))
+            console.log('Updated!')
+        } else {
+            console.log('error')
+        }
     }
 })
 
